@@ -12,7 +12,14 @@ use yii\web\AssetBundle;
 
 class DateTimePickerAsset extends AssetBundle
 {
-    public $sourcePath = '@huijiewei/datetimepicker/assets';
+    public $sourcePath = '@npm/bootstrap-datetime-picker';
+
+    public $publishOptions = [
+        'only' => [
+            'js/',
+            'css/',
+        ],
+    ];
 
     public $css = [
         'css/bootstrap-datetimepicker.min.css',
