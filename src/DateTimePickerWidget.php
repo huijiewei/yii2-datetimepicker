@@ -18,7 +18,7 @@ class DateTimePickerWidget extends InputWidget
 {
     public $clientOptions = [];
 
-    /* @var $_assetBundle AssetBundle */
+    /* @var $_assetBundle DateTimePickerAsset */
     private $_assetBundle;
 
     public function init()
@@ -30,16 +30,41 @@ class DateTimePickerWidget extends InputWidget
         ], $this->options);
 
         $this->clientOptions = ArrayHelper::merge([
-            'language'    => 'zh-CN',
+            'language' => 'zh-CN',
             'fontAwesome' => true,
-            'autoclose'   => 'true',
-            'todayBtn'    => true,
+            'autoclose' => 'true',
+            'todayBtn' => true,
         ], $this->clientOptions);
 
         $this->registerAssetBundle();
         $this->registerLanguage();
 
         $this->registerScript();
+    }
+
+    public function registerAssetBundle()
+    {
+        $this->_assetBundle = DateTimePickerAsset::register($this->getView());
+    }
+
+    public function registerLanguage()
+    {
+        if (!isset($this->clientOptions['language']) || empty($this->clientOptions['language'])) {
+            return;
+        }
+
+        $this->_assetBundle->registerLanguageJsFile($this->clientOptions['language']);
+    }
+
+    public function registerScript()
+    {
+        $clientOptions = Json::encode($this->clientOptions);
+
+        $js = <<<EOD
+        $('#{$this->id}').datetimepicker({$clientOptions});
+EOD;
+
+        $this->getView()->registerJs($js);
     }
 
     public function run()
@@ -55,35 +80,6 @@ class DateTimePickerWidget extends InputWidget
         $html .= '</div>';
 
         return $html;
-    }
-
-    public function registerLanguage()
-    {
-        if (!isset($this->clientOptions['language']) || empty($this->clientOptions['language'])) {
-            return;
-        }
-
-        $langAsset = 'js/locales/bootstrap-datetimepicker.' . $this->clientOptions['language'] . '.js';
-
-        if (file_exists(\Yii::getAlias($this->_assetBundle->sourcePath . DIRECTORY_SEPARATOR . $langAsset))) {
-            $this->_assetBundle->js[] = $langAsset;
-        }
-    }
-
-    public function registerScript()
-    {
-        $clientOptions = Json::encode($this->clientOptions);
-
-        $js = <<<EOD
-        $('#{$this->id}').datetimepicker({$clientOptions});
-EOD;
-
-        $this->getView()->registerJs($js);
-    }
-
-    public function registerAssetBundle()
-    {
-        $this->_assetBundle = DateTimePickerAsset::register($this->getView());
     }
 
     public function getAssetBundle()

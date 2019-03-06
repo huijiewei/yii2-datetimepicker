@@ -33,4 +33,13 @@ class DateTimePickerAsset extends AssetBundle
         'yii\web\JqueryAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
+
+    public function registerLanguageJsFile($lang)
+    {
+        $langAsset = 'js/locales/bootstrap-datetimepicker.' . $lang . '.js';
+
+        if (file_exists(\Yii::getAlias($this->sourcePath . DIRECTORY_SEPARATOR . $langAsset))) {
+            $this->js[] = $langAsset;
+        }
+    }
 }
