@@ -17,6 +17,7 @@ class DateTimePickerAsset extends AssetBundle
     public $publishOptions = [
         'only' => [
             'js/*',
+            'js/locales/*',
             'css/*',
         ],
     ];
