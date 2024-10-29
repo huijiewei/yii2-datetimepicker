@@ -1,13 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: huijiewei
- * Date: 5/24/15
- * Time: 10:48
- */
-
 namespace huijiewei\datetimepicker;
 
+use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -16,12 +10,15 @@ use yii\widgets\InputWidget;
 
 class DateTimePickerWidget extends InputWidget
 {
-    public $clientOptions = [];
+    public array $clientOptions = [];
 
-    /* @var $_assetBundle DateTimePickerAsset */
-    private $_assetBundle;
+    /* @var $_assetBundle DateTimePickerAsset|null */
+    private DateTimePickerAsset|null $_assetBundle;
 
-    public function init()
+    /**
+     * @throws InvalidConfigException
+     */
+    public function init(): void
     {
         parent::init();
 
@@ -42,12 +39,12 @@ class DateTimePickerWidget extends InputWidget
         $this->registerScript();
     }
 
-    public function registerAssetBundle()
+    public function registerAssetBundle(): void
     {
         $this->_assetBundle = DateTimePickerAsset::register($this->getView());
     }
 
-    public function registerLanguage()
+    public function registerLanguage(): void
     {
         if (!isset($this->clientOptions['language']) || empty($this->clientOptions['language'])) {
             return;
@@ -56,18 +53,18 @@ class DateTimePickerWidget extends InputWidget
         $this->_assetBundle->registerLanguageJsFile($this->clientOptions['language']);
     }
 
-    public function registerScript()
+    public function registerScript(): void
     {
         $clientOptions = Json::encode($this->clientOptions);
 
         $js = <<<EOD
-        $('#{$this->id}').datetimepicker({$clientOptions});
+        $('#$this->id').datetimepicker($clientOptions);
 EOD;
 
         $this->getView()->registerJs($js);
     }
 
-    public function run()
+    public function run(): string
     {
         $html = '<div class="input-group">';
 
@@ -82,7 +79,7 @@ EOD;
         return $html;
     }
 
-    public function getAssetBundle()
+    public function getAssetBundle(): DateTimePickerAsset
     {
         if (!($this->_assetBundle instanceof AssetBundle)) {
             $this->registerAssetBundle();

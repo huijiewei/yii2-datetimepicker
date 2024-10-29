@@ -1,13 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: huijiewei
- * Date: 15/9/4
- * Time: 17:10
- */
-
 namespace huijiewei\datetimepicker;
 
+use Yii;
 use yii\web\AssetBundle;
 
 class DateTimePickerAsset extends AssetBundle
@@ -35,11 +29,11 @@ class DateTimePickerAsset extends AssetBundle
         'yii\bootstrap\BootstrapAsset',
     ];
 
-    public function registerLanguageJsFile($lang)
+    public function registerLanguageJsFile($lang): void
     {
         $langAsset = 'js/locales/bootstrap-datetimepicker.' . $lang . '.js';
 
-        if (file_exists(\Yii::getAlias($this->sourcePath . DIRECTORY_SEPARATOR . $langAsset))) {
+        if (file_exists(Yii::getAlias($this->sourcePath . DIRECTORY_SEPARATOR . $langAsset))) {
             $this->js[] = $langAsset;
         }
     }
